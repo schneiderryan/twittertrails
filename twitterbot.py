@@ -30,11 +30,15 @@ def check_mentions(api, keywords, since_id):
         new_since_id = max(tweet.id, new_since_id)
         if tweet.in_reply_to_status_id is not None:
             continue
-        if any(keyword in tweet.text.lower() for keyword in keywords):
+
+        if any(keyword in tweet.text.lower() for keyword in keywords) and tweet.place is not None and \
+                tweet.place.full_name == "Columbus, OH":
             logger.info(f"Answering to {tweet.user.name}")
 
             if not tweet.user.following:
                 tweet.user.follow()
+
+            print(tweet.text)
 
             api.update_status(
                 status='My status update',
@@ -48,7 +52,7 @@ def main():
     api = create_api()
     since_id = 1
     while True:
-        since_id = check_mentions(api, ["trail", "running, biking"], since_id)
+        since_id = check_mentions(api, ["trail", "run", "biking", "walk", "bike"], since_id)
         logger.info("Waiting...")
         time.sleep(60)
 
