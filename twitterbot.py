@@ -2,6 +2,7 @@ import tweepy
 import logging
 import time
 import config
+import discovery_backend
 
 
 def create_api():
@@ -38,13 +39,17 @@ def check_mentions(api, keywords, since_id):
             if not tweet.user.following:
                 tweet.user.follow()
 
-            print(tweet.text)
+            result = discovery_backend.getNLQ(tweet.text)
 
-            api.update_status(
-                status='My status update',
-                in_reply_to_status_id=tweet.id,
-                auto_populate_reply_metadata=True
-            )
+            if result['matching_results'] > 0:
+
+                response = 'Hey you should check out ' + result['results'][0]['name']
+
+                api.update_status(
+                    status=response,
+                    in_reply_to_status_id=tweet.id,
+                    auto_populate_reply_metadata=True
+                )
     return new_since_id
 
 

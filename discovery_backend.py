@@ -13,13 +13,9 @@ discovery.set_service_url('https://api.us-south.discovery.watson.cloud.ibm.com/i
 envID = '35ef0ced-f8c5-4f16-a57c-098c66505472'
 colID = 'c7bf0198-9e14-40db-9e96-2b4d348585c1'
 
-def getNLQ(tweet: str, lat: float, lng: float):
-    areaFilter = '(latitude>' + str(eval("lat - .5")) + ',latitude<' + str(eval("lat - (.5) * -1")) + ',longitude>' + str(eval("(lng * 1) - .5")) + ',longitude<' + str(eval("(lng * 1) - (.5 * -1)")) + ')'
-    DetailedResponse = discovery.query(environment_id = envID, collection_id = colID, filter = str(areaFilter), natural_language_query = tweet, count = 10)
+def getNLQ(tweet: str):
+    areaFilter = '(latitude>' + str(eval("40 - .5")) + ',latitude<' + str(eval("40 - (.5) * -1")) + ',longitude>' + str(eval("(83 * 1) - .5")) + ',longitude<' + str(eval("(83 * 1) - (.5 * -1)")) + ')'
+    DetailedResponse = discovery.query(environment_id = envID, collection_id = colID, filter = areaFilter, natural_language_query = tweet, count = 10)
     response = json.dumps(DetailedResponse.get_result(), indent = 2)
     response = json.loads(response)
     return response
-
-tweetResponse = getNLQ("walks around columbus", 40, 83)
-
-print(tweetResponse['results'][0]['name'])
